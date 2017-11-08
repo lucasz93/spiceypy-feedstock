@@ -15,9 +15,9 @@ source:
     - 0001-Remove-CSPICE-installation-logic.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
-  noarch_python: True
+  noarch: python
 
   script: python setup.py install --single-version-externally-managed --record record.txt
 
