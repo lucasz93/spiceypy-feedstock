@@ -1,4 +1,4 @@
-From 81075866b7e6ee5a1dae1b23e7fc09a8785146bf Mon Sep 17 00:00:00 2001
+From 31e33c32022aeec3525cbbeb290fe81568ebc333 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
 Date: Sun, 24 Jun 2018 19:00:07 +0200
 Subject: [PATCH 1/2] Remove CSPICE installation logic
@@ -7,8 +7,8 @@ Now it must be installed through external tools, like conda.
 ---
  getspice.py                      | 261 ---------------------------------------
  setup.py                         | 241 +-----------------------------------
- spiceypy/utils/libspicehelper.py |   8 +-
- 3 files changed, 8 insertions(+), 502 deletions(-)
+ spiceypy/utils/libspicehelper.py |  11 +-
+ 3 files changed, 9 insertions(+), 504 deletions(-)
  delete mode 100644 getspice.py
 
 diff --git getspice.py getspice.py
@@ -557,26 +557,27 @@ index bffca16..12d6694 100644
      setup_requires=DEPENDENCIES,
      install_requires=DEPENDENCIES,
 diff --git spiceypy/utils/libspicehelper.py spiceypy/utils/libspicehelper.py
-index eeb3a89..767b569 100644
+index eeb3a89..614ae54 100644
 --- spiceypy/utils/libspicehelper.py
 +++ spiceypy/utils/libspicehelper.py
-@@ -23,15 +23,15 @@ SOFTWARE.
+@@ -23,15 +23,14 @@ SOFTWARE.
  """
  
  from ctypes import CDLL, POINTER, c_int, c_double, c_char, c_char_p, c_void_p
 -import os
- import platform
+-import platform
++from ctypes.util import find_library
++
  from . import support_types as stypes
  from . import callbacks
  
-+# Simpler function find_library won't work at the moment, see
-+# https://github.com/conda-forge/cspice-feedstock/issues/4
- host_OS = platform.system()
+-host_OS = platform.system()
 -sharedLib = "cspice.dll" if host_OS == "Windows" else "spice.so"
 -sitePath = os.path.join(os.path.dirname(__file__), sharedLib)
 -libspice = CDLL(sitePath)
-+sharedLib = "cspice.dll" if host_OS == "Windows" else "libcspice.so"
-+libspice = CDLL(sharedLib)
++# Simpler function find_library won't work at the moment, see
++# https://github.com/conda-forge/cspice-feedstock/issues/4
++libspice = CDLL(find_library("cspice"))
  
  s_cell_p = POINTER(stypes.SpiceCell)
  s_elip_p = POINTER(stypes.Ellipse)
