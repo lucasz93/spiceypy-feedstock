@@ -1,22 +1,22 @@
-From e630a56e5b857499bc7ef9c2290584ba1a6bbfdc Mon Sep 17 00:00:00 2001
+From 81075866b7e6ee5a1dae1b23e7fc09a8785146bf Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
-Date: Fri, 10 Nov 2017 08:38:03 +0100
+Date: Sun, 24 Jun 2018 19:00:07 +0200
 Subject: [PATCH 1/2] Remove CSPICE installation logic
 
-    Now it must be installed through external tools, like conda.
+Now it must be installed through external tools, like conda.
 ---
- getspice.py                      | 246 ---------------------------------------
- setup.py                         | 162 --------------------------
- spiceypy/utils/libspicehelper.py |  15 ++-
- 3 files changed, 10 insertions(+), 413 deletions(-)
+ getspice.py                      | 261 ---------------------------------------
+ setup.py                         | 241 +-----------------------------------
+ spiceypy/utils/libspicehelper.py |   8 +-
+ 3 files changed, 8 insertions(+), 502 deletions(-)
  delete mode 100644 getspice.py
 
 diff --git getspice.py getspice.py
 deleted file mode 100644
-index db5fda6..0000000
+index 481577c..0000000
 --- getspice.py
 +++ /dev/null
-@@ -1,246 +0,0 @@
+@@ -1,261 +0,0 @@
 -"""
 -The MIT License (MIT)
 -
@@ -227,9 +227,24 @@ index db5fda6..0000000
 -            import urllib3
 -
 -            try:
--                # Create a PoolManager
--                https = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
--                                            ca_certs=certifi.where())
+-                # Search proxy in ENV variables
+-                proxies = {}
+-                for key, value in os.environ.items():
+-                    if '_proxy' in key.lower():
+-                        proxies[key.lower().replace('_proxy','')] = value
+-
+-                # Create a ProolManager
+-                if 'https' in proxies:
+-                    https = urllib3.ProxyManager(proxies['https'],
+-                                                cert_reqs='CERT_REQUIRED',
+-                                                ca_certs=certifi.where())
+-                elif 'http' in proxies:
+-                    https = urllib3.ProxyManager(proxies['http'],
+-                                                cert_reqs='CERT_REQUIRED',
+-                                                ca_certs=certifi.where())
+-                else:
+-                    https = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
+-                                                ca_certs=certifi.where())
 -                # Send the request to get the CSPICE package.
 -                response = https.request('GET', self._rcspice,
 -                                         timeout=urllib3.Timeout(10))
@@ -242,7 +257,7 @@ index db5fda6..0000000
 -        # Use the standard urllib (using system OpenSSL).
 -        else:
 -            try:
--                # Send the request to get the CSPICE package.
+-                # Send the request to get the CSPICE package (proxy auto detected).
 -                response = urllib.request.urlopen(self._rcspice, timeout=10)
 -            except urllib.error.URLError as err:
 -                raise RuntimeError(err.reason)
@@ -264,12 +279,27 @@ index db5fda6..0000000
 -            proc.stdin.write(self._local.read())
 -        self._local.close()
 diff --git setup.py setup.py
-index b5f9a33..a8662da 100644
+index bffca16..12d6694 100644
 --- setup.py
 +++ setup.py
-@@ -34,27 +34,10 @@ import shutil
+@@ -21,30 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ """
+-from setuptools import setup, Command
+-from setuptools.command.install import install
+-from setuptools.command.build_py import build_py
++from setuptools import setup
+ from setuptools.command.test import test as TestCommand
+-from setuptools.dist import Distribution
+ import ssl
+ import sys
+-import os
+-import subprocess
+-import platform
+-import shutil
  
- __author__ = 'AndrewAnnex'
+-__author__ = 'AndrewAnnex'
  
 -# Get OS platform
 -host_OS = platform.system()
@@ -281,42 +311,26 @@ index b5f9a33..a8662da 100644
 -cspice_dir = os.path.join(root_dir, 'cspice')
 -# Make the directory path for cspice/lib
 -lib_dir = os.path.join(cspice_dir, 'lib')
--
++__author__ = 'AndrewAnnex'
+ 
  TEST_DEPENDENCIES = ['numpy>=1.12.0', 'six>=1.9.0', 'pytest>=2.9.0']
  DEPENDENCIES = ['numpy>=1.12.0', 'six>=1.9.0', 'certifi>=2017.1.23']
- REQUIRES = ['numpy', 'six']
- 
--# If we have an old version of OpenSSL, CSPICE will be downloaded
--# (if required) using urllib3.  Extend the list of required packages.
--if ssl.OPENSSL_VERSION < 'OpenSSL 1.0.1g':
--    DEPENDENCIES.extend(['urllib3[secure]>=1.22', 'pyOpenSSL>=17.3.0'])
--
--
- # py.test integration from pytest.org
- class PyTest(TestCommand):
- 
-@@ -74,150 +57,6 @@ class BinaryDistribution(Distribution):
-         return False
+@@ -56,155 +39,6 @@ if ssl.OPENSSL_VERSION < 'OpenSSL 1.0.1g':
+     DEPENDENCIES.extend(['urllib3[secure]>=1.22', 'pyOpenSSL>=17.3.0'])
  
  
--class InstallSpiceyPy(install):
--    """Class that extends the install command and encapsulates the
--    process for installing the required CSPICE distribution at the
--    right place.
--    """
+-class InstallCSpice(object):
 -
--    def run(self):
--        self.check_for_spice()
--
--        print("Host OS: {0}".format(host_OS))
--        if is_unix:
--            self.unix_method()
--        elif host_OS == "Windows":
--            self.windows_method()
--        else:
--            sys.exit("Unsupported OS: {0}".format(host_OS))
--
--        install.run(self)
+-    @staticmethod
+-    def get_cspice():
+-        if InstallCSpice.check_for_spice():
+-            print("Host OS: {0}".format(host_OS))
+-            if is_unix:
+-                InstallCSpice.unix_method()
+-            elif host_OS == "Windows":
+-                InstallCSpice.windows_method()
+-            else:
+-                sys.exit("Unsupported OS: {0}".format(host_OS))
 -
 -    @staticmethod
 -    def check_for_spice():
@@ -330,6 +344,8 @@ index b5f9a33..a8662da 100644
 -            if not os.path.exists(cspice_dir):
 -                message = 'Unable to find CSPICE at {0}. Exiting'.format(cspice_dir)
 -                sys.exit(message)
+-            return True
+-        return False
 -
 -    @staticmethod
 -    def unpack_cspice():
@@ -423,68 +439,147 @@ index b5f9a33..a8662da 100644
 -            print("Error Cleaning up cspice folder")
 -            raise e
 -
--    def unix_method(self):
+-    @staticmethod
+-    def unix_method():
 -        # Unpack cspice.a and csupport.a
--        self.unpack_cspice()
+-        InstallCSpice.unpack_cspice()
 -        # Build the shared Library
--        self.build_library()
+-        InstallCSpice.build_library()
 -        # Move to correct location (root of the distribution)
--        self.move_to_root_directory()
+-        InstallCSpice.move_to_root_directory()
 -
--    def windows_method(self):
+-    @staticmethod
+-    def windows_method():
 -        if os.path.exists(os.path.join(cspice_dir, "lib", "cspice.dll")):
 -            print("Found pre-made cspice.dll, not building")
 -        elif os.path.exists(os.path.join(root_dir, 'spiceypy', 'utils', 'cspice.dll')):
 -            print("Found pre-made cspice.dll in spiceypy, not building")
 -        else:
 -            # Build the DLL
--            self.build_library()
+-            InstallCSpice.build_library()
 -            # Move to correct location (root of the distribution)
--            self.move_to_root_directory()
+-            InstallCSpice.move_to_root_directory()
 -
 -
+-class SpiceyPyBinaryDistribution(Distribution):
+-    def is_pure(self):
+-        return False
+-    def root_is_pure(self):
+-        return False
+-
+-
+ class PyTest(TestCommand):
+     # py.test integration from pytest.org
+     def finalize_options(self):
+@@ -218,74 +52,8 @@ class PyTest(TestCommand):
+         sys.exit(errcode)
+ 
+ 
+-class InstallSpiceyPy(install):
+-    """Class that extends the install command and encapsulates the
+-    process for installing the required CSPICE distribution at the
+-    right place.
+-    """
+-
+-    def finalize_options(self):
+-        install.finalize_options(self)
+-        self.install_lib = self.install_platlib
+-
+-    def run(self):
+-        InstallCSpice.get_cspice()
+-        install.run(self)
+-
+-class GetCSPICECommand(Command):
+-    """ Custom command to get the correct cspice and build the shared library for spiceypy """
+-    description = 'downloads cspice and builds the shared library'
+-    user_options = []
+-
+-    def initialize_options(self):
+-        pass
+-
+-    def finalize_options(self):
+-        pass
+-
+-    def run(self):
+-        InstallCSpice.get_cspice()
+-
+-class BuildPyCommand(build_py):
+-    """ Custom build command to ensure cspice is built and packaged """
+-
+-    def run(self):
+-        InstallCSpice.get_cspice()
+-        build_py.run(self)
+-
+-
+-
+-cmdclass = { 'install': InstallSpiceyPy,
+-             'test': PyTest,
+-             'build_py': BuildPyCommand,
+-             'get_cspice': GetCSPICECommand }
+-
+-# https://stackoverflow.com/questions/45150304/how-to-force-a-python-wheel-to-be-platform-specific-when-building-it
+-# http://lepture.com/en/2014/python-on-a-hard-wheel
+-try:
+-    from wheel.bdist_wheel import bdist_wheel
+-    print("Wheel is Present")
+-    class _bdist_wheel(bdist_wheel):
+-
+-        def finalize_options(self):
+-            bdist_wheel.finalize_options(self)
+-            self.root_is_pure = False
+-
+-        def get_tag(self):
+-            # TODO: since I use six, in future consider replacing first two tags with py2.py3 and none
+-            tag = bdist_wheel.get_tag(self)
+-            repl = 'macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64'
+-            if 'macosx_10' in tag[2]:
+-                tag  = (tag[0], tag[1], repl)
+-            return tag
+-
+-    # add our override to the cmdclass dict so we can inject this behavior
+-    cmdclass['bdist_wheel'] = _bdist_wheel
+-
+-except ImportError:
+-    # we don't have wheel installed so there is nothing to change
+-    print("Wheel is not installed...")
+-    pass
++cmdclass = {
++             'test': PyTest}
+ 
+ 
  readme = open('README.rst', 'r')
- readmetext = readme.read()
- readme.close()
-@@ -256,7 +95,6 @@ setup(
-     requires=REQUIRES,
-     tests_require=TEST_DEPENDENCIES,
-     cmdclass={
--        'install': InstallSpiceyPy,
-         'test': PyTest},
-     test_suite='spiceypy.tests.test_wrapper.py',
-     extras_require={'testing': ['pytest']}
+@@ -319,7 +87,6 @@ setup(
+     packages=['spiceypy', 'spiceypy.utils'],
+     include_package_data=True,
+     zip_safe=False,
+-    distclass=SpiceyPyBinaryDistribution,
+     package_data={'spiceypy': ['utils/*.so', "utils/*.dll"]},
+     setup_requires=DEPENDENCIES,
+     install_requires=DEPENDENCIES,
 diff --git spiceypy/utils/libspicehelper.py spiceypy/utils/libspicehelper.py
-index ea2d5e4..0ec29c7 100644
+index eeb3a89..767b569 100644
 --- spiceypy/utils/libspicehelper.py
 +++ spiceypy/utils/libspicehelper.py
-@@ -22,16 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
+@@ -23,15 +23,15 @@ SOFTWARE.
  """
  
--from ctypes import CDLL, POINTER, c_bool, c_int, c_double, c_char, c_char_p, c_void_p
+ from ctypes import CDLL, POINTER, c_int, c_double, c_char, c_char_p, c_void_p
 -import os
-+from ctypes import POINTER, c_bool, c_int, c_double, c_char, c_char_p, c_void_p
  import platform
  from . import support_types as stypes
  from . import callbacks
  
++# Simpler function find_library won't work at the moment, see
++# https://github.com/conda-forge/cspice-feedstock/issues/4
  host_OS = platform.system()
 -sharedLib = "cspice.dll" if host_OS == "Windows" else "spice.so"
 -sitePath = os.path.join(os.path.dirname(__file__), sharedLib)
 -libspice = CDLL(sitePath)
-+if host_OS == "Windows":
-+    from ctypes import windll
-+    loader = windll
-+else:
-+    from ctypes import cdll
-+    loader = cdll
-+
 +sharedLib = "cspice.dll" if host_OS == "Windows" else "libcspice.so"
-+libspice = loader.LoadLibrary(sharedLib)
++libspice = CDLL(sharedLib)
  
- __author__ = 'AndrewAnnex'
- 
+ s_cell_p = POINTER(stypes.SpiceCell)
+ s_elip_p = POINTER(stypes.Ellipse)
 -- 
 2.7.4
 
