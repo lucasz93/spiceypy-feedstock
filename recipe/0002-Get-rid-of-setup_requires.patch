@@ -1,4 +1,4 @@
-From 735435b79dcd45a62775bbfbdfd35d174ed33e66 Mon Sep 17 00:00:00 2001
+From f6ecfd8ab411218eb2a85f318036f3fa4787a399 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
 Date: Sun, 24 Jun 2018 19:00:36 +0200
 Subject: [PATCH 2/2] Get rid of setup_requires
