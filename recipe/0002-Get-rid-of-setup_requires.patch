@@ -1,4 +1,4 @@
-From f6ecfd8ab411218eb2a85f318036f3fa4787a399 Mon Sep 17 00:00:00 2001
+From 79f4ab91d920f08412d12566c876d304172bb810 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
 Date: Sun, 24 Jun 2018 19:00:36 +0200
 Subject: [PATCH 2/2] Get rid of setup_requires
@@ -7,10 +7,10 @@ Subject: [PATCH 2/2] Get rid of setup_requires
  setup.py | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git setup.py setup.py
-index 12d6694..d44f2ff 100644
---- setup.py
-+++ setup.py
+diff --git a/setup.py b/setup.py
+index 6c2c53e..2216a4d 100644
+--- a/setup.py
++++ b/setup.py
 @@ -88,7 +88,6 @@ setup(
      include_package_data=True,
      zip_safe=False,
@@ -20,5 +20,5 @@ index 12d6694..d44f2ff 100644
      requires=REQUIRES,
      tests_require=TEST_DEPENDENCIES,
 -- 
-2.7.4
+2.17.1
 
