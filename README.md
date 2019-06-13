@@ -9,16 +9,20 @@ Feedstock license: BSD 3-Clause
 
 Summary: The NASA JPL NAIF SPICE toolkit wrapper written in Python
 
-['SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an\nessential tool for scientists and engineers alike in the planetary\nscience field for Solar System Geometry.\n']
+SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an
+essential tool for scientists and engineers alike in the planetary
+science field for Solar System Geometry.
+
 
 Current build status
 ====================
 
 
-<table><tr>
-    <td>All platforms:</td>
+<table><tr><td>All platforms:</td>
     <td>
-      <img src="https://img.shields.io/badge/noarch-disabled-lightgrey.svg" alt="noarch disabled">
+      <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=3583&branchName=master">
+        <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/spiceypy-feedstock?branchName=master">
+      </a>
     </td>
   </tr>
 </table>
