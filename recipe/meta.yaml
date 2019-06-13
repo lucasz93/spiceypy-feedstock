@@ -16,7 +16,7 @@ source:
     - 0002-Get-rid-of-setup_requires.patch
 
 build:
-  number: 0
+  number: 1
   noarch: python
 
   script: python -m pip install --no-deps --ignore-installed .
@@ -41,8 +41,7 @@ about:
   license_file: LICENSE
   summary: 'The NASA JPL NAIF SPICE toolkit wrapper written in Python'
 
-  description:
-    - |
+  description: |
       SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an
       essential tool for scientists and engineers alike in the planetary
       science field for Solar System Geometry.
