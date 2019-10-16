@@ -1,0 +1,25 @@
+From 9a83d20f50a308fd456d1f6f8caffb673598d9a1 Mon Sep 17 00:00:00 2001
+From: AndrewAnnex <ama6fy@virginia.edu>
+Date: Tue, 15 Oct 2019 20:27:01 -0400
+Subject: [PATCH 3/3] added tests to packages in setup.py
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 3663e65..b879e4b 100644
+--- a/setup.py
++++ b/setup.py
+@@ -86,7 +86,7 @@ setup(
+         "Operating System :: POSIX :: BSD :: FreeBSD",
+         "Operating System :: Microsoft :: Windows"
+     ],
+-    packages=['spiceypy', 'spiceypy.utils'],
++    packages=['spiceypy', 'spiceypy.utils', 'spiceypy.tests'],
+     include_package_data=True,
+     zip_safe=False,
+     package_data={'spiceypy': ['utils/*.so', "utils/*.dll"]},
+-- 
+2.16.2
+
