@@ -1,7 +1,7 @@
 From 79f4ab91d920f08412d12566c876d304172bb810 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
 Date: Sun, 24 Jun 2018 19:00:36 +0200
-Subject: [PATCH 2/3] Get rid of setup_requires
+Subject: [PATCH 2/2] Get rid of setup_requires
 
 ---
  setup.py | 1 -
