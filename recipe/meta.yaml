@@ -32,10 +32,15 @@ requirements:
     - six
 
 test:
+  imports:
+    - spiceypy
+    - spiceypy.utils
   requires:
     - pytest
+  source_files:
+    - spiceypy/tests
   commands:
-    - pytest --pyargs spiceypy
+    - pytest spiceypy
 
 about:
   home: https://github.com/AndrewAnnex/SpiceyPy
