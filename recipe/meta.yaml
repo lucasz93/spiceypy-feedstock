@@ -16,13 +16,14 @@ source:
     - 0002-Get-rid-of-setup_requires.patch
 
 build:
-  number: 0
+  number: 1
   noarch: python
 
   script: python -m pip install --no-deps --ignore-installed .
 
 requirements:
   host:
+    - python
     - pip
   run:
     - python
