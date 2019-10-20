@@ -40,7 +40,7 @@ test:
   source_files:
     - spiceypy/tests
   commands:
-    - pytest spiceypy -rf
+    - {{ PYTHON }} -m pytest spiceypy -rpP --verbose
 
 about:
   home: https://github.com/AndrewAnnex/SpiceyPy
