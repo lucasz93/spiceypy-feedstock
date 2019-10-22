@@ -1,0 +1,63 @@
+From 1e5c5ebe45fc0288c799ce8665f93f328bd9b127 Mon Sep 17 00:00:00 2001
+From: AndrewAnnex <ama6fy@virginia.edu>
+Date: Tue, 22 Oct 2019 13:52:33 -0400
+Subject: [PATCH] added cross platform tmp directory for unit tests
+
+---
+ spiceypy/tests/gettestkernels.py   | 4 +++-
+ spiceypy/tests/test_spiceerrors.py | 3 +--
+ spiceypy/tests/test_wrapper.py     | 4 +---
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/spiceypy/tests/gettestkernels.py b/spiceypy/tests/gettestkernels.py
+index 7a84ba8..fc03fd1 100644
+--- a/spiceypy/tests/gettestkernels.py
++++ b/spiceypy/tests/gettestkernels.py
+@@ -24,11 +24,13 @@ SOFTWARE.
+ 
+ import os
+ import time
++import platform
++import tempfile
+ import six.moves.urllib as urllib
+ from six import print_ as six_print
+ 
+ 
+-cwd = os.path.realpath(os.path.dirname(__file__))
++cwd = '/tmp' if platform.system() == 'Darwin' else tempfile.gettempdir()
+ 
+ def getKernelNameFromURL(url):
+     return url.split('/')[-1]
+diff --git a/spiceypy/tests/test_spiceerrors.py b/spiceypy/tests/test_spiceerrors.py
+index addc423..21c0181 100644
+--- a/spiceypy/tests/test_spiceerrors.py
++++ b/spiceypy/tests/test_spiceerrors.py
+@@ -24,9 +24,8 @@ SOFTWARE.
+ 
+ import pytest
+ import spiceypy as spice
++from spiceypy.tests.gettestkernels import cwd
+ import os
+-cwd = os.path.realpath(os.path.dirname(__file__))
+-
+ 
+ def test_geterror():
+     spice.setmsg("some error occured")
+diff --git a/spiceypy/tests/test_wrapper.py b/spiceypy/tests/test_wrapper.py
+index 689df1c..e9ae05c 100644
+--- a/spiceypy/tests/test_wrapper.py
++++ b/spiceypy/tests/test_wrapper.py
+@@ -36,9 +36,7 @@ from spiceypy.tests.gettestkernels import downloadKernels,\
+     ExtraKernels, \
+     cleanup_Cassini_Kernels,\
+     cleanup_Extra_Kernels, \
+-    cleanup_Core_Kernels
+-
+-cwd = os.path.realpath(os.path.dirname(__file__))
++    cleanup_Core_Kernels, cwd
+ 
+ def setup_module(module):
+     downloadKernels()
+-- 
+2.16.2
+
