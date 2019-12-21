@@ -14,7 +14,6 @@ source:
   patches:
     - 0001-Remove-CSPICE-installation-logic.patch
     - 0002-Get-rid-of-setup_requires.patch
-    - 0003-added-cross-platform-tmp-directory-for-unit-tests.patch
 
 build:
   number: 0
