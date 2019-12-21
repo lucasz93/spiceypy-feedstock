@@ -37,6 +37,8 @@ test:
     - spiceypy.utils
   requires:
     - pytest
+    - pandas
+    - numpy
   source_files:
     - spiceypy/tests
   commands:
