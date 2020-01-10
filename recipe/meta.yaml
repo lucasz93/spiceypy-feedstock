@@ -24,6 +24,7 @@ requirements:
   host:
     - python >=3.6
     - pip
+    - numpy >=1.17.0
   run:
     - python >=3.6
     - cspice ==66
