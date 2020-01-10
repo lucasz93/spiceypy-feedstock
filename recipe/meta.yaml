@@ -12,7 +12,7 @@ source:
   sha256: {{ sha256 }}
 
   patches:
-    - 0001-Remove-CSPICE-installation-logic.patch
+    - 0001-simpler-patch-for-conda-forge-dist.patch
     - 0002-Get-rid-of-setup_requires.patch
 
 build:
