@@ -1,21 +1,23 @@
-From 4a570e3822d510df7479baf13c6cb66a88e730e4 Mon Sep 17 00:00:00 2001
+From eaef597ed0e40e069df8b47b1c5e15029780ebaa Mon Sep 17 00:00:00 2001
 From: AndrewAnnex <ama6fy@virginia.edu>
-Date: Fri, 10 Jan 2020 11:35:06 -0500
-Subject: [PATCH] removing getspice related stuff, was causing a import error
- on six
+Date: Fri, 10 Jan 2020 10:40:13 -0500
+Subject: [PATCH] get rid of setup_requires
 
+removing getspice related stuff, was causing a import error on six
+
+rm getspice
 ---
- getspice.py | 446 ----------------------------------------------------
- setup.py    |  53 +------
- 2 files changed, 1 insertion(+), 498 deletions(-)
+ getspice.py | 403 ----------------------------------------------------
+ setup.py    |  54 +------
+ 2 files changed, 1 insertion(+), 456 deletions(-)
  delete mode 100644 getspice.py
 
 diff --git a/getspice.py b/getspice.py
 deleted file mode 100644
-index b46e7ee..0000000
+index 05bad00..0000000
 --- a/getspice.py
 +++ /dev/null
-@@ -1,446 +0,0 @@
+@@ -1,403 +0,0 @@
 -"""
 -The MIT License (MIT)
 -
@@ -92,12 +94,13 @@ index b46e7ee..0000000
 -import os
 -import shutil
 -import subprocess
--import ssl
 -import sys
 -import time
+-import urllib
+-import urllib.request
+-import urllib.error
 -from zipfile import ZipFile
 -
--import six.moves.urllib as urllib
 -
 -host_OS = platform.system()
 -# Get platform is Unix-like OS or not
@@ -232,61 +235,17 @@ index b46e7ee..0000000
 -           Therefore this method provides two different implementations for the
 -           HTTPS GET call to the NAIF server to download the required CSPICE
 -           distribution package.
+-
+-           * as of 3.0.1, we default back to use built in openssl, as we require python 3.6 or above *
 -        """
--        # Use urllib3 (based on PyOpenSSL).
--        if ssl.OPENSSL_VERSION < "OpenSSL 1.0.1g":
--            # Force urllib3 to use pyOpenSSL
--            import urllib3.contrib.pyopenssl
+-        try:
+-            # Send the request to get the CSPICE package (proxy auto detected).
+-            response = urllib.request.urlopen(self._rcspice, timeout=10)
+-        except urllib.error.URLError as err:
+-            raise RuntimeError(err.reason)
 -
--            urllib3.contrib.pyopenssl.inject_into_urllib3()
--
--            import certifi
--            import urllib3
--
--            try:
--                # Search proxy in ENV variables
--                proxies = {}
--                for key, value in os.environ.items():
--                    if "_proxy" in key.lower():
--                        proxies[key.lower().replace("_proxy", "")] = value
--
--                # Create a ProolManager
--                if "https" in proxies:
--                    https = urllib3.ProxyManager(
--                        proxies["https"],
--                        cert_reqs="CERT_REQUIRED",
--                        ca_certs=certifi.where(),
--                    )
--                elif "http" in proxies:
--                    https = urllib3.ProxyManager(
--                        proxies["http"],
--                        cert_reqs="CERT_REQUIRED",
--                        ca_certs=certifi.where(),
--                    )
--                else:
--                    https = urllib3.PoolManager(
--                        cert_reqs="CERT_REQUIRED", ca_certs=certifi.where()
--                    )
--                # Send the request to get the CSPICE package.
--                response = https.request(
--                    "GET", self._rcspice, timeout=urllib3.Timeout(10)
--                )
--            except urllib3.exceptions.HTTPError as err:
--                raise RuntimeError(err.message)
--
--            # Convert the response to io.BytesIO and store it in local memory.
--            self._local = io.BytesIO(response.data)
--
--        # Use the standard urllib (using system OpenSSL).
--        else:
--            try:
--                # Send the request to get the CSPICE package (proxy auto detected).
--                response = urllib.request.urlopen(self._rcspice, timeout=10)
--            except urllib.error.URLError as err:
--                raise RuntimeError(err.reason)
--
--            # Convert the response to io.BytesIO and store it in local memory.
--            self._local = io.BytesIO(response.read())
+-        # Convert the response to io.BytesIO and store it in local memory.
+-        self._local = io.BytesIO(response.read())
 -
 -    def _unpack(self):
 -        """Unpacks the CSPICE package on the given root directory. Note that
@@ -463,7 +422,7 @@ index b46e7ee..0000000
 -            # Move to correct location (root of the distribution)
 -            InstallCSpice.move_to_root_directory()
 diff --git a/setup.py b/setup.py
-index 02ca075..fdf8fe6 100644
+index b2e358c..75e77f4 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -22,13 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -542,6 +501,14 @@ index 02ca075..fdf8fe6 100644
  readme = open("README.rst", "r")
  readmetext = readme.read()
  readme.close()
+@@ -135,7 +84,6 @@ setup(
+     include_package_data=True,
+     zip_safe=False,
+     package_data={"spiceypy": ["utils/*.so", "utils/*.dll"]},
+-    setup_requires=DEPENDENCIES,
+     install_requires=DEPENDENCIES,
+     requires=REQUIRES,
+     tests_require=TEST_DEPENDENCIES,
 -- 
 2.24.1
 
