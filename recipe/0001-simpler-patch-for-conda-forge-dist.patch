@@ -1,7 +1,7 @@
 From 58c0100f263d025037a75d0047b75e674e60137b Mon Sep 17 00:00:00 2001
 From: AndrewAnnex <ama6fy@virginia.edu>
 Date: Thu, 9 Jan 2020 22:41:35 -0500
-Subject: [PATCH] simpler patch for conda forge dist
+Subject: [PATCH 1/2] simpler patch for conda forge dist
 
 ---
  setup.py                         |  9 ---------

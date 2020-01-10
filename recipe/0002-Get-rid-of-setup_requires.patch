@@ -1,24 +1,26 @@
-From 79f4ab91d920f08412d12566c876d304172bb810 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Juan=20Luis=20Cano=20Rodr=C3=ADguez?= <juanlu001@gmail.com>
-Date: Sun, 24 Jun 2018 19:00:36 +0200
-Subject: [PATCH 2/2] Get rid of setup_requires
+From aa7c99b291d2c7b2c702616918082d229527e576 Mon Sep 17 00:00:00 2001
+From: AndrewAnnex <ama6fy@virginia.edu>
+Date: Fri, 10 Jan 2020 10:40:13 -0500
+Subject: [PATCH 2/2] get rid of setup_requires
 
 ---
- setup.py | 1 -
- 1 file changed, 1 deletion(-)
+ setup.py | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 6c2c53e..2216a4d 100644
+index f6bcf12..9ada6df 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -88,7 +88,6 @@ setup(
+@@ -141,9 +141,7 @@ setup(
+     packages=["spiceypy", "spiceypy.utils"],
      include_package_data=True,
      zip_safe=False,
-     package_data={'spiceypy': ['utils/*.so', "utils/*.dll"]},
+-    distclass=SpiceyPyBinaryDistribution,
+     package_data={"spiceypy": ["utils/*.so", "utils/*.dll"]},
 -    setup_requires=DEPENDENCIES,
      install_requires=DEPENDENCIES,
      requires=REQUIRES,
      tests_require=TEST_DEPENDENCIES,
 -- 
-2.17.1
+2.16.2
 
