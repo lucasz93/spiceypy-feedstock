@@ -27,7 +27,7 @@ requirements:
   run:
     - python >=3.6
     - cspice ==66
-    - numpy
+    - numpy >=1.17.0
 
 test:
   imports:
@@ -36,7 +36,7 @@ test:
   requires:
     - pytest
     - pandas
-    - numpy
+    - numpy >=1.17.0
   source_files:
     - spiceypy/tests
   commands:
