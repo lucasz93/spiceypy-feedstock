@@ -1,6 +1,6 @@
 {% set name = "spiceypy" %}
-{% set version = "2.3.2" %}
-{% set sha256 = "a10064b5b266e2e2363e1060c77db8653677eada0103970b47d9c75e08ba906f" %}
+{% set version = "3.0.0" %}
+{% set sha256 = "d786348c36d35707f5bfd587e04628ed0ce7c34fab1044e6b66f2dce11038b73" %}
 
 package:
   name: {{ name|lower }}
@@ -12,24 +12,23 @@ source:
   sha256: {{ sha256 }}
 
   patches:
-    - 0001-Remove-CSPICE-installation-logic.patch
+    - 0001-simpler-patch-for-conda-forge-dist.patch
     - 0002-Get-rid-of-setup_requires.patch
 
 build:
   number: 0
   noarch: python
-
   script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   host:
-    - python
+    - python >=3.6
     - pip
+    - numpy >=1.17.0
   run:
-    - python
+    - python >=3.6
     - cspice ==66
-    - numpy
-    - six
+    - numpy >=1.17.0
 
 test:
   imports:
@@ -38,7 +37,7 @@ test:
   requires:
     - pytest
     - pandas
-    - numpy
+    - numpy >=1.17.0
   source_files:
     - spiceypy/tests
   commands:
