@@ -1,6 +1,6 @@
 {% set name = "spiceypy" %}
-{% set version = "3.0.2" %}
-{% set sha256 = "93c19a59575766a53ba804d0a6258d652cbb9d08259eaab274fc52e6327edc81" %}
+{% set version = "3.1.1" %}
+{% set sha256 = "75613e6258cd6adeeb67b23e3505f11cadb55ff631f1bbda2123d373d9a514fa" %}
 
 package:
   name: {{ name|lower }}
@@ -12,8 +12,7 @@ source:
   sha256: {{ sha256 }}
 
   patches:
-    - 0001-simpler-patch-for-conda-forge-dist.patch
-    - 0002-Get-rid-of-setup_requires.patch
+    - 0001-newer-single-patch-for-conda-installs.patch
 
 build:
   number: 0
@@ -57,5 +56,5 @@ about:
 
 extra:
   recipe-maintainers:
-    - juanlu001
+    - astrojuanlu
     - AndrewAnnex
