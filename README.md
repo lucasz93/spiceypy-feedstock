@@ -120,5 +120,5 @@ Feedstock Maintainers
 =====================
 
 * [@AndrewAnnex](https://github.com/AndrewAnnex/)
-* [@juanlu001](https://github.com/juanlu001/)
+* [@astrojuanlu](https://github.com/astrojuanlu/)
 
