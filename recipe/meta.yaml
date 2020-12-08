@@ -1,6 +1,6 @@
 {% set name = "spiceypy" %}
-{% set version = "3.1.1" %}
-{% set sha256 = "75613e6258cd6adeeb67b23e3505f11cadb55ff631f1bbda2123d373d9a514fa" %}
+{% set version = "4.0.0" %}
+{% set sha256 = "176b21c60f80e27c38c05fb9c40ae95140d9a02be2abba2affe72bd18a425b0f" %}
 
 package:
   name: {{ name|lower }}
@@ -46,12 +46,12 @@ about:
   home: https://github.com/AndrewAnnex/SpiceyPy
   license: MIT
   license_file: LICENSE
-  summary: 'The NASA JPL NAIF SPICE toolkit wrapper written in Python'
+  summary: The NASA JPL NAIF SPICE toolkit wrapper written in Python
 
   description: |
-      SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an
-      essential tool for scientists and engineers alike in the planetary
-      science field for Solar System Geometry.
+    SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an
+    essential tool for scientists and engineers alike in the planetary
+    science field for Solar System Geometry.
   doc_url: http://spiceypy.readthedocs.io/
 
 extra:
