@@ -1,15 +1,12 @@
 {% set name = "spiceypy" %}
 {% set version = "2.3.2" %}
-{% set sha256 = "a10064b5b266e2e2363e1060c77db8653677eada0103970b47d9c75e08ba906f" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  path: ../../SpiceyPy
 
   patches:
     - 0001-Remove-CSPICE-installation-logic.patch
