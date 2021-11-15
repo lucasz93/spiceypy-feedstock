@@ -11,9 +11,6 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
-  patches:
-    - 0001-newer-single-patch-for-conda-installs.patch
-
 build:
   number: 0
   noarch: python
