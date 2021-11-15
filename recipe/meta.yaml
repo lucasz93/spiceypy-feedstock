@@ -37,10 +37,8 @@ test:
     - pytest
     - pandas
     - numpy >=1.17.0
-  source_files:
-    - spiceypy/tests
   commands:
-    - python -m pytest spiceypy -rpP -v --verbose --tb=long
+    - python -m pytest --pyargs spiceypy -rpP -v --verbose --tb=long
 
 about:
   home: https://github.com/AndrewAnnex/SpiceyPy
