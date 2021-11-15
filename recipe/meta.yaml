@@ -1,6 +1,6 @@
 {% set name = "spiceypy" %}
-{% set version = "4.0.2" %}
-{% set sha256 = "1e7d1cdd36b620829c21233c8b89252fe5d684a0414fdc7da53a4481781a755b" %}
+{% set version = "4.0.3" %}
+{% set sha256 = "2cf83dcbb7f870506de82e33fad2fd229c52d2506d5f7fc5ebb2eafbc59921ec" %}
 
 package:
   name: {{ name|lower }}
@@ -37,10 +37,8 @@ test:
     - pytest
     - pandas
     - numpy >=1.17.0
-  source_files:
-    - spiceypy/tests
   commands:
-    - python -m pytest spiceypy -rpP -v --verbose --tb=long
+    - python -m pytest --pyargs spiceypy -rpP -v --verbose --tb=long
 
 about:
   home: https://github.com/AndrewAnnex/SpiceyPy
