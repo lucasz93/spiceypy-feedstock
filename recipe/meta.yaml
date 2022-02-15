@@ -34,7 +34,7 @@ test:
     - spiceypy
     - spiceypy.utils
   requires:
-    - pytest
+    - pytest <=7.0.0
     - pandas
     - numpy >=1.17.0
   commands:
