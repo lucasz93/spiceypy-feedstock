@@ -26,7 +26,7 @@ requirements:
     - numpy >=1.17.0
   run:
     - python >=3.6
-    - cspice ==66
+    - cspice ==67
     - numpy >=1.17.0
 
 test:
