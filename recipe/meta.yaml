@@ -1,6 +1,6 @@
 {% set name = "spiceypy" %}
-{% set version = "5.1.0" %}
-{% set sha256 = "3d081a9c2daf30062eef5b8d779e6137885170a650a55efa0c18e5a48cb73c0f" %}
+{% set version = "5.1.1" %}
+{% set sha256 = "13497fdc0acaa60d1bde64cd2cb41c486565690fdf3bbbf46b8d85901b6ab513" %}
 
 package:
   name: {{ name|lower }}
